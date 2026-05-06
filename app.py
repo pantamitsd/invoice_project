@@ -9,7 +9,7 @@ from pdf2image import convert_from_bytes
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # -------- PAGE TITLE --------
-st.title("📄 PDF Invoice Extractor")
+st.title("📄 PDF Invoice Extractor For Swiss Military")
 
 # -------- PDF UPLOAD --------
 uploaded_file = st.file_uploader(
