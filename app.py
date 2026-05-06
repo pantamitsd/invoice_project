@@ -6,7 +6,7 @@ import pytesseract
 from pdf2image import convert_from_bytes
 
 # -------- TESSERACT PATH --------
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+#pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # -------- PAGE TITLE --------
 st.title("📄 PDF Invoice Extractor For Swiss Military")
