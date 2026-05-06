@@ -43,8 +43,7 @@ if uploaded_file:
         st.warning("⚠️ OCR Running...")
 
         images = convert_from_bytes(
-            uploaded_file.read(),
-            poppler_path=r"C:\poppler-26.02.0\Library\bin"
+            uploaded_file.read()
         )
 
         for img in images:
