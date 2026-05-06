@@ -5,8 +5,11 @@ import re
 import pytesseract
 from pdf2image import convert_from_bytes
 
-# -------- TESSERACT PATH --------
-#pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# -------- PAGE CONFIG --------
+st.set_page_config(
+    page_title="PDF Invoice Extractor",
+    layout="wide"
+)
 
 # -------- PAGE TITLE --------
 st.title("📄 PDF Invoice Extractor For Swiss Military")
@@ -21,6 +24,9 @@ uploaded_file = st.file_uploader(
 if uploaded_file:
 
     text = ""
+
+    # -------- READ PDF BYTES --------
+    pdf_bytes = uploaded_file.getvalue()
 
     # -------- NORMAL PDF READ --------
     try:
@@ -42,9 +48,7 @@ if uploaded_file:
 
         st.warning("⚠️ OCR Running...")
 
-        images = convert_from_bytes(
-            uploaded_file.read()
-        )
+        images = convert_from_bytes(pdf_bytes)
 
         for img in images:
             text += pytesseract.image_to_string(img)
@@ -142,11 +146,13 @@ if uploaded_file:
 
                 clean_line = line.replace("|", " ")
 
+                # -------- PRODUCT REGEX --------
                 product_match = re.search(
                     r'([A-Z0-9_,\-/]+)\s+(\d{8})\s+(\d+)\s+(SET|PCS)',
                     clean_line
                 )
 
+                # -------- DECIMAL NUMBERS --------
                 numbers = re.findall(
                     r'[\d,]+\.\d{2}',
                     clean_line
@@ -159,8 +165,10 @@ if uploaded_file:
                     qty = product_match.group(3)
                     unit = product_match.group(4)
 
+                    # -------- RATE --------
                     rate = numbers[0] if len(numbers) > 0 else ""
 
+                    # -------- AMOUNT --------
                     amount = numbers[-1] if len(numbers) > 1 else ""
 
                     final_data.append([
@@ -200,9 +208,14 @@ if uploaded_file:
     ])
 
     # -------- SHOW TABLE --------
-    st.dataframe(df)
+    st.success("✅ Data Extracted Successfully")
 
-    # -------- DOWNLOAD EXCEL --------
+    st.dataframe(
+        df,
+        use_container_width=True
+    )
+
+    # -------- EXCEL DOWNLOAD --------
     excel_file = "output.xlsx"
 
     df.to_excel(excel_file, index=False)
